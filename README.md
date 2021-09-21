@@ -9,3 +9,6 @@
 # Netcdf file structure produced by parsivel2nc.py
 - See the file `netcdf_structure.txt` to see how the ncdump output of the parsivel2 netcdf files look like
 - The processing of the netcdf files (for plotting) is demonstrated in `plot_disdrometer.py`
+
+# Plotting of main disdrometer data
+- Plotting of the netcdf files created with parsivel2nc.py can be realized using the function `plot_disdrometer.py`. Check the file and adjust it to your system settings, before usage. 
