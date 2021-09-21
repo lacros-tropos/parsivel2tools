@@ -1,0 +1,147 @@
+netcdf \20210607_disdrometer {
+dimensions:
+        time = UNLIMITED ; // (2880 currently)
+        diameter = 32 ;
+        velocity = 32 ;
+        nv = 2 ;
+variables:
+        double lat ;
+                lat:standard_name = "latitude" ;
+                lat:long_name = "Latitude of instrument location" ;
+                lat:units = "degrees_north" ;
+        double lon ;
+                lon:standard_name = "longitude" ;
+                lon:long_name = "Longitude of instrument location" ;
+                lon:units = "degrees_east" ;
+        double zsl ;
+                zsl:standard_name = "altitude" ;
+                zsl:long_name = "Altitude of instrument sensor above mean sea level" ;
+                zsl:units = "m" ;
+        int time(time) ;
+                time:standard_name = "time" ;
+                time:long_name = "Unix time at start of data transfer in seconds after 00:00 UTC on
+                time:units = "seconds since 1970-01-01 00:00:00" ;
+                time:bounds = "time_bnds" ;
+                time:comment = "Time on data acquisition pc at initialization of serial connection t
+        int time_bnds(time, nv) ;
+                time_bnds:units = "s" ;
+                time_bnds:comment = "Upper and lower bounds of measurement interval." ;
+        int interval(time) ;
+                interval:long_name = "Length of measurement interval" ;
+                interval:units = "s" ;
+                interval:comment = "Variable 09 - Sample interval between two data retrieval request
+        double diameter(diameter) ;
+                diameter:long_name = "Center diameter of precipitation particles" ;
+                diameter:units = "m" ;
+                diameter:comment = "Predefined diameter classes. Note the variable bin size." ;
+        double diameter_spread(diameter) ;
+                diameter_spread:long_name = "Width of diameter interval" ;
+                diameter_spread:units = "m" ;
+                diameter_spread:comment = "Bin size of each diameter class." ;
+        int diameter_bnds(diameter, nv) ;
+                diameter_bnds:units = "m" ;
+                diameter_bnds:comment = "Upper and lower bounds of diameter interval." ;
+        double velocity(velocity) ;
+                velocity:long_name = "Center fall velocity of precipitation particles" ;
+                velocity:units = "m s-1" ;
+                velocity:comment = "Predefined velocity classes. Note the variable bin size." ;
+        double velocity_spread(velocity) ;
+                velocity_spread:long_name = "Width of velocity interval" ;
+                velocity_spread:units = "m" ;
+                velocity_spread:comment = "Bin size of each velocity interval." ;
+        double velocity_bnds(velocity, nv) ;
+                velocity_bnds:comment = "Upper and lower bounds of velocity interval." ;
+        double data_raw(time, diameter, velocity) ;
+                data_raw:_FillValue = -999. ;
+                data_raw:long_name = "Raw Data as a function of particle diameter and velocity" ;
+                data_raw:units = "1" ;
+                data_raw:comment = "Variable 93 - Raw data." ;
+        double number_concentration(time, diameter) ;
+                number_concentration:_FillValue = -999. ;
+                number_concentration:long_name = "Number of particles per diameter class" ;
+                number_concentration:units = "log10(m-3 mm-1)" ;
+                number_concentration:comment = "Variable 90 - Field N (d)" ;
+        double fall_velocity(time, diameter) ;
+                fall_velocity:_FillValue = -999. ;
+                fall_velocity:long_name = "Average velocity of each diameter class" ;
+                fall_velocity:units = "m s-1" ;
+                fall_velocity:comment = "Variable 91 - Field v (d)" ;
+        int n_particles(time) ;
+                n_particles:long_name = "Number of particles in time interval" ;
+                n_particles:units = "1" ;
+                n_particles:comment = "Variable 11 - Number of detected particles" ;
+        double rainfall_rate(time) ;
+                rainfall_rate:_FillValue = -999. ;
+                rainfall_rate:standard_name = "rainfall_rate" ;
+                rainfall_rate:long_name = "Precipitation rate" ;
+                rainfall_rate:units = "m s-1" ;
+                rainfall_rate:comment = "Variable 01 - Rain intensity (32 bit) 0000.000" ;
+        double radar_reflectivity(time) ;
+                radar_reflectivity:_FillValue = -999. ;
+                radar_reflectivity:standard_name = "equivalent_reflectivity_factor" ;
+                radar_reflectivity:long_name = "equivalent radar reflectivity factor" ;
+                radar_reflectivity:units = "dBZ" ;
+                radar_reflectivity:comment = "Variable 07 - Radar reflectivity (32 bit)." ;
+        double E_kin(time) ;
+                E_kin:_FillValue = -999. ;
+                E_kin:long_name = "Kinetic energy of the hydrometeors" ;
+                E_kin:units = "kJ" ;
+                E_kin:comment = "Variable 24 - kinetic Energy of hydrometeors." ;
+        int visibility(time) ;
+                visibility:_FillValue = -999 ;
+                visibility:long_name = "Visibility range in precipitation after MOR" ;
+                visibility:units = "m" ;
+                visibility:comment = "Variable 08 - MOR visibility in the precipitation." ;
+         int synop_WaWa(time) ;
+                synop_WaWa:_FillValue = -999 ;
+                synop_WaWa:long_name = "Synop Code WaWa" ;
+                synop_WaWa:units = "1" ;
+                synop_WaWa:comment = "Variable 03 - Weather code according to SYNOP wawa Table 4680.
+        int synop_WW(time) ;
+                synop_WW:_FillValue = -999 ;
+                synop_WW:long_name = "Synop Code WW" ;
+                synop_WW:units = "1" ;
+                synop_WW:comment = "Variable 04 - Weather code according to SYNOP ww Table 4677." ;
+        int T_sensor(time) ;
+                T_sensor:_FillValue = -999 ;
+                T_sensor:long_name = "Temperature in the sensor" ;
+                T_sensor:units = "K" ;
+                T_sensor:comment = "Variable 12 - Temperature in the Sensor" ;
+        int sig_laser(time) ;
+                sig_laser:long_name = "Signal amplitude of the laser" ;
+                sig_laser:units = "1" ;
+                sig_laser:comment = "Variable 10 - Signal ambplitude of the laser strip" ;
+        int state_sensor(time) ;
+                state_sensor:long_name = "State of the Sensor" ;
+                state_sensor:units = "1" ;
+                state_sensor:comment = "Variable 18 - Sensor status: 0: Everything is okay. 1: Dirty 2: No measurement possible." ;
+        double V_sensor(time) ;
+                V_sensor:long_name = "Sensor Voltage" ;
+                V_sensor:units = "V" ;
+                V_sensor:comment = "Variable 17 - Power supply voltage in the sensor." ;
+        double I_heating(time) ;
+                I_heating:long_name = "Heating Current" ;
+                I_heating:units = "A" ;
+                I_heating:comment = "Variable 16 - Current through the heating system." ;
+        int error_code(time) ;
+                error_code:long_name = "Error Code" ;
+                error_code:units = "1" ;
+                error_code:comment = "Variable 25 - Error code." ;
+
+// global attributes:
+                :Title = "LACROS disdrometer data" ;
+                :Institution = "Leibniz Institute for Tropospheric Research (TROPOS), Leipzig, Germa
+                :Contact_person = "Patric Seifert, seifert@tropos.de" ;
+                :Source = "OTT Parsivel-2 optical disdrometer" ;
+                :History = "Data acquired with python script parsivel2nc.py" ;
+                :Data_telegram_setting = "echo -en \"CS/M/S/%19;%20;%21;%09;%22;%23;%25;%13;%16;%17;4;%07;%08;%12;%11;%24;%34BREAK%93;BREAK%90;BREAK%91;BREAK,\\r\\n\" > /dev/ttyUSB0" ;
+                :Dependencies = "external" ;
+                :Conventions = "CF-1.6 where applicable" ;
+                :Processing_date = "2021-06-07, 00:00:39" ;
+                :Author = "Patric Seifert, seifert@tropos.de" ;
+                :Comments = "Manual of the OTT Parsivel-2 can be found online at http://www.ott.com"
+                :Licence = "For non-commercial use only. Any usage of the data should be reported to
+                :Station_Name = "Punta Arenas" ;
+                :Sensor_ID = "291937" ;
+                :Date = "20210607" ;
+}
