@@ -1,0 +1,20 @@
+#!/bin/bash
+# Bash file to call parsivel2nc for two times within 30 s
+# This script is run every minute by a cronjob
+
+#echo the current date
+date -u
+#execute parsivel2nc.py in background
+python /home/disdrometer/python/parsivel2nc.py >> /home/disdrometer/log/get_parsivel_data.log &
+
+#wait for 30 seconds
+sleep 30
+
+#echo date again
+date -u
+
+#execute parsivel2nc.py again
+python /home/disdrometer/python/parsivel2nc.py >> /home/disdrometer/log/get_parsivel_data.log
+
+#Check size of the log file. If it's too big (i.e. > 50MB), remove it
+find /home/disdrometer/log/get_parsivel_data.log -size +50000k -exec rm {} \;

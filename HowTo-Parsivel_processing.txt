@@ -1,0 +1,11 @@
+That's a quick manual on what to do if you moved the LACROS site or if you have to reset data processing
+(1) Within the script 'parsivel2nc.py' update the location info accordingly for the new site
+
+(2) To set the Station Name for the current site
+echo -en "CS/K/Leipzig\r\n" > /dev/ttyUSB0
+
+(3) To set the standard data transfer telegram so that data can be interpreted with parsivel2nc.py script:
+echo -en "CS/M/S/%19;%20;%21;%09;%22;%23;%25;%13;%16;%17;%18;%10BREAK%01;%02;%03;%04;%07;%08;%12;%11;%24;%34BREAK%93;BREAK%90;BREAK%91;BREAK,\r\n" > /dev/ttyUSB0
+
+(4) The script is automatically run every 30 seconds via a cronjob. Check by if cronjobs are activated by typing crontab -l
+
