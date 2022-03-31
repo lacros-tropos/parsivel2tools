@@ -19,7 +19,7 @@ def ToLong(a):
     newarray=[]
     for i in a:
         if len(i) > 0:
-            newarray.append(long(i))
+            newarray.append(int(i))
     return newarray
 
 def write_nc(rootfolder, newdata):
@@ -31,22 +31,21 @@ def write_nc(rootfolder, newdata):
     #    os.mkdir(dir)
     #Create NC File 
     ncfilename=dir+'/'+time.strftime("%Y%m%d",time.gmtime(newdata['UnixTime_bnds'][0][0]))+'_disdrometer'+'.nc'
-    print 'Writing to File: ', ncfilename, ' at ', time.strftime("%H:%M:%S",time.gmtime(newdata['UnixTime']))
+    print('Writing to File: ', ncfilename, ' at ', time.strftime("%H:%M:%S",time.gmtime(newdata['UnixTime'])))
 
     if os.path.exists(ncfilename):
         ncfile = NCDataset(ncfilename,'a', format='NETCDF3_CLASSIC')
 
-
-	#get length of unlimited dimension time
-	idx_unlimited_dim=ncfile.dimensions['time'].size
+        #get length of unlimited dimension time
+        idx_unlimited_dim=ncfile.dimensions['time'].size
 
         varNames= ncfile.variables.keys()
         for variable in varNames:
             var=ncfile.variables[variable]
             if variable == 'time': 
                 var[idx_unlimited_dim]=(newdata['UnixTime'])
-	    if variable == 'time_bnds':
-		var[idx_unlimited_dim,:]=(newdata['UnixTime_bnds'][0][:])
+            if variable == 'time_bnds':
+                var[idx_unlimited_dim,:]=(newdata['UnixTime_bnds'][0][:])
             if variable == 'interval':
                 var[idx_unlimited_dim]=(newdata['Interval'])
             if variable == 'data_raw':
@@ -87,35 +86,35 @@ def write_nc(rootfolder, newdata):
         ncfile.createDimension('time',None)
         ncfile.createDimension('diameter',32)
         ncfile.createDimension('velocity',32)
-	ncfile.createDimension('nv',2)
+        ncfile.createDimension('nv',2)
 
 
         if newdata['StationName'] == 'CABAUW':
-                newdata['StationName'] = 'Cabauw'
-	if newdata['StationName'] == 'KRAUTHAUSN':
-		newdata['StationName'] = 'Krauthausen'
+            newdata['StationName'] = 'Cabauw'
+        if newdata['StationName'] == 'KRAUTHAUSN':
+            newdata['StationName'] = 'Krauthausen'
         if newdata['StationName'] == 'LEIPZIG':
-                newdata['StationName'] = 'Leipzig'
+            newdata['StationName'] = 'Leipzig'
         if newdata['StationName'] == 'MELPITZ':
-                newdata['StationName'] = 'Melpitz'
+            newdata['StationName'] = 'Melpitz'
         if newdata['StationName'] == 'LIMASSOL':
-                newdata['StationName'] = 'Limassol'
+            newdata['StationName'] = 'Limassol'
         if newdata['StationName'] == 'PUNTA':
-                newdata['StationName'] = 'Punta Arenas'
+            newdata['StationName'] = 'Punta Arenas'
+    
 
-
-	now=datetime.datetime.now()
-	data_telegram='echo -en "CS/M/S/%19;%20;%21;%09;%22;%23;%25;%13;%16;%17;%18;%10BREAK%01;%02;%03;%04;%07;%08;%12;%11;%24;%34BREAK%93;BREAK%90;BREAK%91;BREAK,\\r\\n" > /dev/ttyUSB0'
+        now=datetime.datetime.now()
+        data_telegram='echo -en "CS/M/S/%19;%20;%21;%09;%22;%23;%25;%13;%16;%17;%18;%10BREAK%01;%02;%03;%04;%07;%08;%12;%11;%24;%34BREAK%93;BREAK%90;BREAK%91;BREAK,\\r\\n" > /dev/ttyUSB0'
         #1-d Variables as global attributes:
         setattr(ncfile,'Title','LACROS disdrometer data')
         setattr(ncfile,'Institution','Leibniz Institute for Tropospheric Research (TROPOS), Leipzig, Germany.')
         setattr(ncfile,'Contact_person','Patric Seifert, seifert@tropos.de')
         setattr(ncfile,'Source','OTT Parsivel-2 optical disdrometer')
         setattr(ncfile,'History','Data acquired with python script parsivel2nc.py')
-	setattr(ncfile,'Data_telegram_setting',data_telegram)
-	setattr(ncfile,'Dependencies','external')
+        setattr(ncfile,'Data_telegram_setting',data_telegram)
+        setattr(ncfile,'Dependencies','external')
         setattr(ncfile,'Conventions','CF-1.6 where applicable')
-	setattr(ncfile,'Processing_date',now.strftime("%Y-%m-%d, %H:%M:%S"))
+        setattr(ncfile,'Processing_date',now.strftime("%Y-%m-%d, %H:%M:%S"))
         setattr(ncfile,'Author','Patric Seifert, seifert@tropos.de')
         setattr(ncfile,'Comments','Manual of the OTT Parsivel-2 can be found online at http://www.ott.com')
         setattr(ncfile,'Licence','For non-commercial use only. Any usage of the data should be reported to the contact person.')
@@ -148,7 +147,7 @@ def write_nc(rootfolder, newdata):
         setattr(data, 'standard_name','time')
         setattr(data,'long_name','Unix time at start of data transfer in seconds after 00:00 UTC on 1/1/1970')
         setattr(data,'units','seconds since 1970-01-01 00:00:00')
-	setattr(data,'bounds','time_bnds')
+        setattr(data,'bounds','time_bnds')
         setattr(data,'comment','Time on data acquisition pc at initialization of serial connection to Parsivel.')
         data[0]=(newdata['UnixTime'])
 
@@ -177,7 +176,7 @@ def write_nc(rootfolder, newdata):
         data[:]=(newdata['diameter_spread'])
 
         data=ncfile.createVariable('diameter_bnds','i',('diameter','nv'))
-	setattr(data,'units','m')
+        setattr(data,'units','m')
         setattr(data,'comment','Upper and lower bounds of diameter interval.')
         data[:,:]=(newdata['diameter_bnds'])
 
@@ -252,7 +251,7 @@ def write_nc(rootfolder, newdata):
         #data[0]=(newdata['RR_total'])
         
         data=ncfile.createVariable('radar_reflectivity','d',('time',), fill_value=-999)
-	setattr(data,'standard_name','equivalent_reflectivity_factor')
+        setattr(data,'standard_name','equivalent_reflectivity_factor')
         setattr(data,'long_name','equivalent radar reflectivity factor')
         setattr(data,'units','dBZ')
         setattr(data,'comment','Variable 07 - Radar reflectivity (32 bit).')
@@ -315,11 +314,11 @@ def write_nc(rootfolder, newdata):
         data=ncfile.createVariable('error_code','i',('time',))
         setattr(data,'long_name','Error Code')
         setattr(data,'units','1')
-	setattr(data,'comment','Variable 25 - Error code.')
+        setattr(data,'comment','Variable 25 - Error code.')
         data[0]=(newdata['ErrorCode'])
 
     ncfile.close()
-    print '***SUCCESS writing nc data! '
+    print('***SUCCESS writing nc data! ')
 
 
 ############################
@@ -396,14 +395,16 @@ ser = serial.Serial(port='/dev/ttyUSB0',baudrate=19200,timeout=5)
 #read output from serial port
 UnixTime=time.time()
 #output=ser.readline(eol=',')
-ser.write("CS/P\r")
+#ser.write("CS/P\r")
+ser.write(str.encode("CS/P\r"))
+ser.write(b"CS/P\r")
 output=ser.readline()
 #sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
 #output = sio.readline()
 ser.close()
 #Serial connection is closed now
 
-output=output.split('BREAK')
+output=output.decode().split('BREAK')
 #print output
 
 
@@ -428,9 +429,9 @@ data['diameter_spread'] = [0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125
 
 data['diameter_bnds']=[]
 for i in range(len(data['diameter'])):
-	data['diameter'][i]=data['diameter'][i]*1e-3
-        data['diameter_spread'][i]=data['diameter_spread'][i]*1e-3
-	data['diameter_bnds'].append([ data['diameter'][i]-data['diameter_spread'][i]/2, data['diameter'][i]+data['diameter_spread'][i]/2])
+    data['diameter'][i]=data['diameter'][i]*1e-3
+    data['diameter_spread'][i]=data['diameter_spread'][i]*1e-3
+    data['diameter_bnds'].append([ data['diameter'][i]-data['diameter_spread'][i]/2, data['diameter'][i]+data['diameter_spread'][i]/2])
 
 data['diameter_bnds'][0][0]=0.;
 
@@ -460,7 +461,7 @@ parts=output[0].split(';')
 #
 
 data['UnixTime_bnds']=[]
-data['Interval']    = long(parts[3])  # %09: Messinterval s
+data['Interval']    = int(parts[3])  # %09: Messinterval s
 data['UnixTime_bnds'].append([data['UnixTime']-data['Interval'], data['UnixTime']])
 data['StationName'] = parts[4]        # %22: Stationsname
 data['StationID']   = parts[5]        # %23: Stationsnummer
@@ -469,7 +470,7 @@ data['SensorID']    = parts[7]        # %13: Seriennummer des Sensors
 data['I_Heat']      = float(parts[8]) # %16: Heating Current
 data['V_Sensor']    = float(parts[9]) # %17: Sensor Voltage
 data['SensorState'] = int(parts[10])  # %18: Sensorstatus
-data['SigLaser']    = long(parts[11]) # %10: Signalamplitude vom Laser
+data['SigLaser']    = int(parts[11]) # %10: Signalamplitude vom Laser
 
 #Messwerte
 parts=output[1].split(';')
@@ -480,7 +481,7 @@ data['SYNOP_WW']    = int(parts[3])   # %04: Synop WaWa
 data['dBZ']         = float(parts[4]) # %07: Radar Reflectivity
 data['MOR']         = int(parts[5])   # %08: Sichtweite im Niederschlag nach MOR
 data['TSensor']     = int(parts[6])   # %12: Sensor Temperature degC
-data['NParticles']  = long(parts[7])  # %11: Anzahl der detektierten Partikel
+data['NParticles']  = int(parts[7])  # %11: Anzahl der detektierten Partikel
 data['RR_accum']    = float(parts[8]) # %24: Regenmenge absolut
 data['E_kin']       = float(parts[9]) # %34: Kinetische Energie
 

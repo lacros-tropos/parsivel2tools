@@ -18,8 +18,8 @@ import math
 import argparse
 
 def get_unix_time(year,month,day,hour,minute,second):
-    unixtime=tm.mktime([year,month,day,hour,minute,second,0,0,0])
-    return unixtime
+    unixtime = dt.datetime(year,month,day,hour,minute,second)
+    return unixtime.replace(tzinfo=dt.timezone.utc).timestamp()
 
 def get_nc_files(folders,s_unix, e_unix):
 
@@ -151,7 +151,7 @@ def plotcontour (x,y,z,xmin,xmax,xtitle,ytitle,varname):
     if i_max == 0:
         i_max=len(y)-1
     if z_max == 0:
-	z_max=0.1
+        z_max=0.1
 
     y_max = y[i_max]
     z     = z[0:i_max,:]
@@ -339,14 +339,14 @@ args   = parser.parse_args()
 times  = get_xrange(args)        
 
 ncfiles   = get_nc_files(folders,times.timestamp_s, times.timestamp_e)
-print ncfiles
+print(ncfiles)
 Unix_time = get_nc_data(ncfiles, 'time')*1.
 
 
 #reduce data
 start = where(Unix_time >= times.timestamp_s)
 if len(start[0]) == 0:
-        print 'Start time not found in data...exiting'
+        print('Start time not found in data...exiting')
         exit()
 start = start[0][0]
 
@@ -368,7 +368,7 @@ V_Field   = get_and_plot_data(ncfiles,Unix_time,plot_time,'fall_velocity',start,
 R=RR*0
 time_interval=get_nc_data(ncfiles, 'interval')*1.
 for i in range(1,len(RR)):
-	R[i]=R[i-1]+RR[i]*time_interval[i]/3600.
+    R[i]=R[i-1]+RR[i]*time_interval[i]/3600.
 ytitle='Accumulated precip. [mm]'
 var='acc_precip'
 plot2d(plot_time,R[start:end],0,0,'Time',ytitle,var)
