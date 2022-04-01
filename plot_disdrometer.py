@@ -365,10 +365,12 @@ N         = get_and_plot_data(ncfiles,Unix_time,plot_time,'n_particles',start,en
 N_Field   = get_and_plot_data(ncfiles,Unix_time,plot_time,'number_concentration',start,end)
 V_Field   = get_and_plot_data(ncfiles,Unix_time,plot_time,'fall_velocity',start,end)
 
-R=RR*0
 time_interval=get_nc_data(ncfiles, 'interval')*1.
-for i in range(1,len(RR)):
-    R[i]=R[i-1]+RR[i]*time_interval[i]/3600.
+rr = RR.copy()
+rr[rr<0] = 0
+R = numpy.cumsum(rr*time_interval/3600.)
+#for i in range(1,len(RR)):
+#    print(R[i], rr[i], time_interval[i])
 ytitle='Accumulated precip. [mm]'
 var='acc_precip'
 plot2d(plot_time,R[start:end],0,0,'Time',ytitle,var)
