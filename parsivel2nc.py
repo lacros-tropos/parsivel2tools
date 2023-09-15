@@ -175,7 +175,7 @@ def write_nc(rootfolder, newdata):
         setattr(data,'comment','Bin size of each diameter class.')
         data[:]=(newdata['diameter_spread'])
 
-        data=ncfile.createVariable('diameter_bnds','i',('diameter','nv'))
+        data=ncfile.createVariable('diameter_bnds','d',('diameter','nv'))
         setattr(data,'units','m')
         setattr(data,'comment','Upper and lower bounds of diameter interval.')
         data[:,:]=(newdata['diameter_bnds'])
