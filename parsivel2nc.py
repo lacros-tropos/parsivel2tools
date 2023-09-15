@@ -175,7 +175,7 @@ def write_nc(rootfolder, newdata):
         setattr(data,'comment','Bin size of each diameter class.')
         data[:]=(newdata['diameter_spread'])
 
-        data=ncfile.createVariable('diameter_bnds','i',('diameter','nv'))
+        data=ncfile.createVariable('diameter_bnds','d',('diameter','nv'))
         setattr(data,'units','m')
         setattr(data,'comment','Upper and lower bounds of diameter interval.')
         data[:,:]=(newdata['diameter_bnds'])
@@ -285,7 +285,7 @@ def write_nc(rootfolder, newdata):
         setattr(data,'long_name','Temperature in the sensor')
         setattr(data,'units','K')
         setattr(data,'comment','Variable 12 - Temperature in the Sensor')
-        data[0]=(newdata['TSensor']+273)
+        data[0]=(newdata['TSensor'])
                 
         data=ncfile.createVariable('sig_laser','i',('time',))
         setattr(data,'long_name','Signal amplitude of the laser')
@@ -480,7 +480,7 @@ data['SYNOP_WaWa']  = int(parts[2])   # %03: Synop WaWa
 data['SYNOP_WW']    = int(parts[3])   # %04: Synop WaWa
 data['dBZ']         = float(parts[4]) # %07: Radar Reflectivity
 data['MOR']         = int(parts[5])   # %08: Sichtweite im Niederschlag nach MOR
-data['TSensor']     = int(parts[6])   # %12: Sensor Temperature degC
+data['TSensor']     = int(parts[6])+273 # %12: Sensor Temperature degC converted to K
 data['NParticles']  = int(parts[7])  # %11: Anzahl der detektierten Partikel
 data['RR_accum']    = float(parts[8]) # %24: Regenmenge absolut
 data['E_kin']       = float(parts[9]) # %34: Kinetische Energie
